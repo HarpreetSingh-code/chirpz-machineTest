@@ -1,0 +1,3 @@
+type FABProps = {
+    onPress: () => void;
+}
