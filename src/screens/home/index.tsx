@@ -1,60 +1,35 @@
 import { View, Text, FlatList, SafeAreaView } from 'react-native'
-import React from 'react'
+import React, { useEffect } from 'react'
 import { HomeProps, PostProps } from './types'
 import RenderPost from '../../components/renderPost'
 import styles from './styles'
 import { MainHeader } from '../../components/header'
 import FAB from '../../components/fab'
+import { useAppDispatch, useAppSelector } from '../../redux/redux-hooks'
+import { getChirpzHomeScreenListApi } from '../../redux/thunks/appThunk'
 
 const Home = ({ navigation }: HomeProps) => {
-  const data: Array<PostProps> = [
-    {
-      user: {
-        name: "Malice martha",
-        verified: true
-      },
-      post: {
-        message: "lorem ipsum dolor sit amet consectetur adipisicing elit. Repudiandae, ipsa. Aperiam, et, in eum, fuga aut voluptas doloribus natus consequatur consectetur rerum quas officia repellat. Quo, quae. Quas, quibusdam.",
-      },
-      tags: ["reading", "hobby", "books", "reading", "hobby", "books", "reading", "hobby", "books"]
-    },
-    {
-      user: {
-        name: "Malice martha",
-        verified: true
-      },
-      post: {
-        message: "lorem ipsum dolor sit amet consectetur adipisicing elit. Repudiandae, ipsa. Aperiam, et, in eum, fuga aut voluptas doloribus natus consequatur consectetur rerum quas officia repellat. Quo, quae. Quas, quibusdam.",
-      },
-      tags: ["reading", "hobby", "books"]
-    },
-    {
-      user: {
-        name: "Malice martha",
-        verified: true
-      },
-      post: {
-        message: "lorem ipsum dolor sit amet consectetur adipisicing elit. Repudiandae, ipsa. Aperiam, et, in eum, fuga aut voluptas doloribus natus consequatur consectetur rerum quas officia repellat. Quo, quae. Quas, quibusdam.",
-      },
-      tags: ["reading", "hobby", "books"]
-    },
-    {
-      user: {
-        name: "Malice martha",
-        verified: false
-      },
-      post: {
-        message: "lorem ipsum dolor sit amet consectetur adipisicing elit. Repudiandae, ipsa. Aperiam, et, in eum, fuga aut voluptas doloribus natus consequatur consectetur rerum quas officia repellat. Quo, quae. Quas, quibusdam.",
-      },
-      tags: ["reading", "hobby", "books", "reading", "hobby", "books", "reading", "hobby", "books", "reading", "hobby", "books"]
-    },
-  ]
+  // hooks
+  const dispatch = useAppDispatch();
+  const { chirpzList: { data, pagination } } = useAppSelector(state => state.appSlice);
+
+  useEffect(() => {
+    fetchChirpzList()
+  }, [])
 
   // methods
-  const navigateToCreatePost = () => {
-    navigation.navigate("CreatePost")
+  const fetchChirpzList = (page?: number) => { // API call
+    dispatch(getChirpzHomeScreenListApi({ page }))
+      .unwrap()
+      .finally(() => { })
   }
 
+  const navigateToCreatePost = () => { navigation.navigate("CreatePost") }
+  const onEndReached = () => {
+    if (pagination.current < pagination.total) {
+      fetchChirpzList(pagination.current + 1)
+    }
+  }
   return (
     <SafeAreaView style={styles.container}>
       <FlatList
@@ -65,6 +40,7 @@ const Home = ({ navigation }: HomeProps) => {
         ListHeaderComponent={MainHeader}
         stickyHeaderHiddenOnScroll={true}
         stickyHeaderIndices={[0]}
+        onEndReached={onEndReached}
       />
       <FAB
         onPress={navigateToCreatePost} />
