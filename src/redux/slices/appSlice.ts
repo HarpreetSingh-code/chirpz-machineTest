@@ -26,6 +26,6 @@ const appSlice = createSlice({
 });
 
 export const {
-
+    addNewPost
 } = appSlice.actions;
 export default appSlice.reducer;

@@ -5,8 +5,14 @@ import styles from './styles'
 import { NavigationHeader } from '../../components/header'
 import Label from '../../components/label'
 import { InputTags, InputText } from '../../components/input'
+import { useAppDispatch } from '../../redux/redux-hooks'
+import { crateNewChirpApi } from '../../redux/thunks/appThunk'
 
-const CreatePost = ({ }: CreatePostProps) => {
+const CreatePost = ({ navigation }: CreatePostProps) => {
+
+  // hooks
+  const dispatch = useAppDispatch();
+
   // state
   const [form, setForm] = useState<Form>({
     post: { isValid: true, value: "" },
@@ -31,7 +37,12 @@ const CreatePost = ({ }: CreatePostProps) => {
         post: form.post.value,
         tags: form.tags.value
       };
-      
+      dispatch(crateNewChirpApi(data))
+        .unwrap()
+        .then(() => {
+          navigation.goBack();
+          Alert.alert("Success", "Post created successfully");
+        })
     }
   }
 
