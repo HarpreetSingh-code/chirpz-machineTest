@@ -18,7 +18,7 @@ const RootStack = () => {
     return (
         <NavigationContainer>
             <Stack.Navigator screenOptions={{ headerShown: false }}>
-                <Stack.Screen name={"MainStack"} component={MainStack} options={{ animation: "ios_from_right" }} />
+                <Stack.Screen name={"MainStack"} component={MainStack} />
             </Stack.Navigator>
         </NavigationContainer>
     );
