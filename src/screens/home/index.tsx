@@ -7,6 +7,7 @@ import { MainHeader } from '../../components/header'
 import FAB from '../../components/fab'
 import { useAppDispatch, useAppSelector } from '../../redux/redux-hooks'
 import { getChirpzHomeScreenListApi } from '../../redux/thunks/appThunk'
+import Label from '../../components/label'
 
 const Home = ({ navigation }: HomeProps) => {
   // hooks
@@ -41,6 +42,7 @@ const Home = ({ navigation }: HomeProps) => {
         stickyHeaderHiddenOnScroll={true}
         stickyHeaderIndices={[0]}
         onEndReached={onEndReached}
+        ListEmptyComponent={() => <Label value={"Woops, No chirps found"} style={styles.emptyListLabel} />}
       />
       <FAB
         onPress={navigateToCreatePost} />
